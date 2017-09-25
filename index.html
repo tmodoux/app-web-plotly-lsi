@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>App Web Plotly</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="topBar">
+        <div class="titleContainer">
+            <div class="pryvLogo">
+                <a href="http://api.pryv.com/" target="_blank">
+                    <img src="img/loader.gif" id="loading"><img>
+                    <img src="img/logo-pryv.png" id="logo-pryv"><img>
+                </a>
+            </div>
+            <div class="title">
+                <h3>App Web Plotly</h3>
+            </div>
+        </div>
+        <div class="buttonContainer">
+            <span id="pryv-button"></span>
+        </div>
+    </div>
+    <div class="subContainer">
+        <div class="choice">
+            <label>
+                <input type='checkbox' onclick="liveRange = this.checked ? 5 : 0;">Follow LiveFeed
+            </label>
+        </div>
+    </div>
+    <div class="sharingcontainer">
+      <div class="sharinglink">
+        <label id="sharelink">
+          -
+        </label>
+      </div>
+      <div class="shareqr">
+        <label>
+          -
+        </label>
+      </div>
+    </div>
+</div><br>
+
+<div id="pryvGraphs">
+</div>
+</body>
+<link href="css/style.css" rel="stylesheet" type="text/css"/>
+<script src="https://cdn.plot.ly/plotly-1.21.0.min.js"></script>
+<script src="pryv.js"></script>
+<script src="https://cdn.jsdelivr.net/lodash/4.17.2/lodash.min.js"></script>
+<script src="index.js"></script>
+</html>

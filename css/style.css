@@ -1,0 +1,121 @@
+body {
+    text-align: center;
+    min-width: 500px;
+    font-family: sans-serif;
+}
+
+.container {
+    width: 400px;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    display: inline-block;
+    background-color: #cdcdcd;
+}
+
+.container a {
+    float: left;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.container a > img {
+    opacity: 0.75;
+    display: block;
+    transition: opacity 500ms;
+}
+
+.container a > img:hover {
+    opacity: 1;
+    transition: opacity 500ms;
+}
+
+.container span {
+    float: right;
+    opacity: 0.75;
+    transition: opacity 500ms;
+}
+
+.container span:hover {
+    opacity: 1;
+    transition: opacity 500ms;
+}
+
+.topBar {
+    height: 30px;
+    margin-bottom: 5px;
+}
+
+.subContainer {
+    height: 50px;
+    padding: 5px;
+    border-radius: 6px;
+    background-color: #e6e6e6;
+}
+
+.titleContainer {
+    float: left;
+    height: 30px;
+}
+
+.titleContainer h3 {
+    float: left;
+    margin: 0px;
+    font-size: 25px;
+}
+
+.sharinglink {
+  border: 1px solid #000000;
+  padding: 5px;
+  margin-top: 10px;
+  float: left;
+  margin: 0px;
+  font-size: 10px;
+}
+
+.buttonContainer {
+    height: 28px;
+    padding-top: 1px;
+    vertical-align: middle;
+}
+
+.pryvLogo {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.pryvLogo > a {
+    width: 30px;
+    height: 30px;
+}
+
+.title {
+    height: 30px;
+    display: inline-block;
+}
+
+.choice {
+    float: left;
+    padding: 10px;
+    margin-top: 4px;
+}
+
+#logo-pryv {
+    display: none;
+}
+
+.graphTitle h4 {
+    float: left;
+    margin: 0px;
+    height: 43px;
+    font-size: 25px;
+    padding-top: 3px;
+    line-height: 48px;
+}
+
+.graphTitle img {
+    float: left;
+    margin-right: 5px;
+}
