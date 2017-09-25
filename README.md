@@ -6,4 +6,4 @@ This app loads (via Pryv monitors) any [numerical type](https://api.pryv.com/eve
 
 It also presents a special graph for voltammetry.
 
-The app is accessible at the following URL: [https://tmodoux.github.io/app-web-plotly/](https://pryv.github.io/app-web-plotly/)
+The app is accessible at the following URL: [https://tmodoux.github.io/app-web-plotly-lsi/](https://tmodoux.github.io/app-web-plotly-lsi/)
