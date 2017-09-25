@@ -49,6 +49,7 @@ document.onreadystatechange = function () {
     var settings = getSettingsFromURL();
     if (settings) {
       var connection = new pryv.Connection(settings);
+      plotVoltammetry(connection);
       connection.fetchStructure(function () {
         setupMonitor(connection);
       });
@@ -380,6 +381,7 @@ function plotVoltammetry(connection) {
   container.appendChild(plot);
   var filter = new pryv.Filter({streams : [plot.id]});
   connection.events.get(filter, function (err, events) {
+    if(err || events==null || events.length<1) return;
     var voltage = [];
     var current = [];
     events.forEach(function(event) {
