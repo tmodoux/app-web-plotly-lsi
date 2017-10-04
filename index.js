@@ -49,7 +49,8 @@ document.onreadystatechange = function () {
     var settings = getSettingsFromURL();
     if (settings) {
       var connection = new pryv.Connection(settings);
-      plotVoltammetry(connection);
+      plotVoltammetry(connection, 'cyclic_voltammetry', 'CV');
+      plotVoltammetry(connection, 'pulse_voltammetry', 'DPV');
       connection.fetchStructure(function () {
         setupMonitor(connection);
       });
@@ -70,7 +71,8 @@ document.onreadystatechange = function () {
           needSignin: resetPlots,
           needValidation: null,
           signedIn: function (connect) {
-            plotVoltammetry(connect);
+            plotVoltammetry(connect, 'cyclic_voltammetry', 'CV');
+            plotVoltammetry(connect, 'pulse_voltammetry', 'DPV');
             connect.fetchStructure(function () {
               setupMonitor(connect);
             });
@@ -375,9 +377,9 @@ var selectorOptions = {
   }]
 };
 
-function plotVoltammetry(connection) {
+function plotVoltammetry(connection, id, name) {
   var plot = document.createElement('div');
-  plot.setAttribute('id', 'voltammetry');
+  plot.setAttribute('id', id);
   container.appendChild(plot);
   var filter = new pryv.Filter({streams : [plot.id]});
   connection.events.get(filter, function (err, events) {
@@ -388,20 +390,19 @@ function plotVoltammetry(connection) {
       var jsonContent = JSON.parse(event.content);
       voltage.push(jsonContent.voltage);
       current.push(jsonContent.current);
-      console.log(jsonContent.voltage, jsonContent.current);
     });
     
     var trace = {
       x: voltage,
       y: current,
       mode: "lines",
-      name: "Voltammetry",
+      name: id,
       type: "scatter",
       xaxis: "x1",
       yaxis: "y1"
     };
     var layout = {
-      title: "Cyclic Voltammetry",
+      title: name,
       xaxis1: {
           anchor: "y1",
           domain: [0.0, 1.0],
