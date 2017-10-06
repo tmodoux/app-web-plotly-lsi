@@ -381,7 +381,7 @@ function plotVoltammetry(connection, id, name) {
   var plot = document.createElement('div');
   plot.setAttribute('id', id);
   container.appendChild(plot);
-  var filter = new pryv.Filter({streams : [plot.id]});
+  var filter = new pryv.Filter({streams : [plot.id], limit: 100000});
   connection.events.get(filter, function (err, events) {
     if(err || events==null || events.length<1) return;
     var voltage = [];
