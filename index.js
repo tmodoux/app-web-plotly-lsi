@@ -49,9 +49,8 @@ document.onreadystatechange = function () {
     var settings = getSettingsFromURL();
     if (settings) {
       var connection = new pryv.Connection(settings);
-      plotVoltammetry(connection, 'cyclic_voltammetry', 'CV');
-      plotVoltammetry(connection, 'pulse_voltammetry', 'DPV');
-      connection.fetchStructure(function () {
+      connection.fetchStructure(function (err, streams) {
+        plotVoltammetry(connection, streams);
         setupMonitor(connection);
       });
     } else {
@@ -71,9 +70,8 @@ document.onreadystatechange = function () {
           needSignin: resetPlots,
           needValidation: null,
           signedIn: function (connect) {
-            plotVoltammetry(connect, 'cyclic_voltammetry', 'CV');
-            plotVoltammetry(connect, 'pulse_voltammetry', 'DPV');
-            connect.fetchStructure(function () {
+            connect.fetchStructure(function (connection, streams) {
+              initVoltammetry(connect, streams);
               setupMonitor(connect);
             });
           }
@@ -338,6 +336,8 @@ function setAllRanges(start, stop) {
 
 
 function resetPlots() {
+  document.getElementById('sharelink').innerHTML = null;
+  container.innerHTML = null;
   if (monitor) {
     monitor.destroy();
   }
@@ -377,11 +377,19 @@ var selectorOptions = {
   }]
 };
 
-function plotVoltammetry(connection, id, name) {
-  var plot = document.createElement('div');
-  plot.setAttribute('id', id);
-  container.appendChild(plot);
-  var filter = new pryv.Filter({streams : [plot.id], limit: 100000});
+function initVoltammetry(connection, streams) {
+  streams.forEach(function (stream) {
+    if(stream.id.includes('voltammetry')) {
+      var plot = document.createElement('div');
+      plot.setAttribute('id', stream.id);
+      container.appendChild(plot);
+      plotVoltammetry(connection, stream.id);
+    }
+  });
+}
+
+function plotVoltammetry(connection, id) {
+  var filter = new pryv.Filter({streams : [id], limit: 100000});
   connection.events.get(filter, function (err, events) {
     if(err || events==null || events.length<1) return;
     var voltage = [];
@@ -395,9 +403,9 @@ function plotVoltammetry(connection, id, name) {
     var trace = {
       x: voltage,
       y: current,
-      mode: "lines",
+      mode: "markers",
       name: id,
-      type: "scatter",
+      connectgaps: true,
       xaxis: "x1",
       yaxis: "y1"
     };
@@ -406,7 +414,7 @@ function plotVoltammetry(connection, id, name) {
       xaxis1: {
           anchor: "y1",
           domain: [0.0, 1.0],
-          title: "Potential (Volts)"
+          title: "Voltage (mV)"
       },
       yaxis1: {
           anchor: "x1",
@@ -415,6 +423,6 @@ function plotVoltammetry(connection, id, name) {
       }
     };
     
-    Plotly.newPlot(plot.id, [trace], layout);
+    Plotly.newPlot(id, [trace], layout);
   });
 }
