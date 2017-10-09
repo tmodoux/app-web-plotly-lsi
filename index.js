@@ -50,7 +50,7 @@ document.onreadystatechange = function () {
     if (settings) {
       var connection = new pryv.Connection(settings);
       connection.fetchStructure(function (err, streams) {
-        plotVoltammetry(connection, streams);
+        initVoltammetry(connection, streams);
         setupMonitor(connection);
       });
     } else {
