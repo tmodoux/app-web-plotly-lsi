@@ -425,7 +425,7 @@ function plotVoltammetry(connection, id, time, day) {
     var trace = {
       x: voltage,
       y: current,
-      mode: "markers",
+      mode: "lines",
       name: id,
       connectgaps: true,
       xaxis: "x1",
