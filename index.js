@@ -2,7 +2,6 @@
 var container = document.getElementById('pryvGraphs');
 var monitor;
 
-
 /**
  * retrieve the registerURL from URL parameters
  */
@@ -380,18 +379,40 @@ var selectorOptions = {
 function initVoltammetry(connection, streams) {
   streams.forEach(function (stream) {
     if(stream.id.includes('voltammetry')) {
+      var contain = document.createElement('div');
       var plot = document.createElement('div');
       plot.setAttribute('id', stream.id);
-      container.appendChild(plot);
-      plotVoltammetry(connection, stream.id);
+      contain.appendChild(plot);
+      var currentDate = new Date();
+      currentDate.setHours(0);
+      currentDate.setMinutes(0);
+      currentDate.setSeconds(0);
+      var currentTime = currentDate.getTime() / 1000;
+      plotVoltammetry(connection, stream.id, currentTime);
+      
+      var currentDay = currentDate.getDay();
+      var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+      for(i=6; i>=0; i--) {
+        var button = document.createElement('button');
+        var dayOfInterest = currentTime-(60*60*24*(i-2));
+        var dayString = days[(currentDay-i+7)%7]
+        button.innerHTML = dayString;
+        button.setAttribute('day', dayOfInterest);
+        button.setAttribute('dayString', dayString);
+        button.onclick = function () {
+          plotVoltammetry(connection, stream.id, this.getAttribute('day'), this.getAttribute('dayString'));
+        };
+        contain.appendChild(button);
+      }
+      container.appendChild(contain);
     }
   });
 }
 
-function plotVoltammetry(connection, id) {
-  var filter = new pryv.Filter({streams : [id], limit: 100000});
+function plotVoltammetry(connection, id, time, day) {
+  var filter = new pryv.Filter({streams : [id], toTime: time});
   connection.events.get(filter, function (err, events) {
-    if(err || events==null || events.length<1) return;
+    if(err || events==null) return;
     var voltage = [];
     var current = [];
     events.forEach(function(event) {
@@ -410,7 +431,7 @@ function plotVoltammetry(connection, id) {
       yaxis: "y1"
     };
     var layout = {
-      title: name,
+      title: id  + " - " + day,
       xaxis1: {
           anchor: "y1",
           domain: [0.0, 1.0],
@@ -422,7 +443,6 @@ function plotVoltammetry(connection, id) {
           title: "Current (uA)"
       }
     };
-    
     Plotly.newPlot(id, [trace], layout);
   });
 }
