@@ -388,10 +388,11 @@ function initVoltammetry(connection, streams) {
       currentDate.setMinutes(0);
       currentDate.setSeconds(0);
       var currentTime = currentDate.getTime() / 1000;
-      plotVoltammetry(connection, stream.id, currentTime);
-      
       var currentDay = currentDate.getDay();
       var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+      plotVoltammetry(connection, stream.id, currentTime, days[currentDay]);
+      
       for(i=6; i>=0; i--) {
         var button = document.createElement('button');
         var dayOfInterest = currentTime-(60*60*24*(i-2));
