@@ -383,35 +383,35 @@ function initVoltammetry(connection, streams) {
       var plot = document.createElement('div');
       plot.setAttribute('id', stream.id);
       contain.appendChild(plot);
-      var currentDate = new Date();
-      currentDate.setHours(0);
-      currentDate.setMinutes(0);
-      currentDate.setSeconds(0);
-      var currentTime = currentDate.getTime() / 1000;
-      var currentDay = currentDate.getDay();
-      var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
-      plotVoltammetry(connection, stream.id, currentTime, days[currentDay]);
+      plotVoltammetry(connection, stream.id);
       
-      for(i=6; i>=0; i--) {
-        var button = document.createElement('button');
-        var dayOfInterest = currentTime-(60*60*24*(i-2));
-        var dayString = days[(currentDay-i+7)%7]
-        button.innerHTML = dayString;
-        button.setAttribute('day', dayOfInterest);
-        button.setAttribute('dayString', dayString);
-        button.onclick = function () {
-          plotVoltammetry(connection, stream.id, this.getAttribute('day'), this.getAttribute('dayString'));
-        };
-        contain.appendChild(button);
-      }
+      var date = document.createElement('input');
+      date.setAttribute('class', 'datepicker');
+      contain.appendChild(date);
       container.appendChild(contain);
-    }
+      $(".datepicker").datepicker({
+        onSelect: function(selected,evnt) {
+          plotVoltammetry(connection, stream.id, selected);
+       }
+      });
+      $(".datepicker").datepicker('setDate', new Date());
+      }
   });
 }
 
-function plotVoltammetry(connection, id, time, day) {
-  var filter = new pryv.Filter({streams : [id], toTime: time});
+function plotVoltammetry(connection, id, day) {
+  var date;
+  if(day) {
+    date = new Date(day);
+  } else {
+    date = new Date();
+    date.setHours(0);
+    date.setMinutes(0);
+    date.setSeconds(0);
+  }
+  var time = date.getTime() / 1000;
+  
+  var filter = new pryv.Filter({streams : [id], toTime: time+(60*60*24)});
   connection.events.get(filter, function (err, events) {
     if(err || events==null) return;
     var voltage = [];
@@ -432,7 +432,7 @@ function plotVoltammetry(connection, id, time, day) {
       yaxis: "y1"
     };
     var layout = {
-      title: id  + " - " + day,
+      title: id,
       xaxis1: {
           anchor: "y1",
           domain: [0.0, 1.0],
